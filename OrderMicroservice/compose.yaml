@@ -1,0 +1,21 @@
+﻿services:
+  order.api:
+    container_name: OrderMicroservice
+    image: order.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Web.Api/Dockerfile
+    environment:
+      - SQL_CONNECTION_STRING=${SQL_CONNECTION_STRING}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5056:8080"
+    networks:
+      - rabbit-network
+
+networks:
+  rabbit-network:
+    external: true
