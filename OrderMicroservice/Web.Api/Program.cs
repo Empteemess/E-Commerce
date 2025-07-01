@@ -12,7 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRabbitMq(builder.Configuration);
+builder.Services
+    .AddRabbitMq(builder.Configuration)
+    .AddDbConfigurations(builder.Configuration);
 
 var app = builder.Build();
 

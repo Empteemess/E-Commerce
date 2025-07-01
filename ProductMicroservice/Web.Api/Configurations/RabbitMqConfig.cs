@@ -8,7 +8,6 @@ public static class RabbitMqConfig
     {
         services.AddMassTransit(opt =>
         {
-
             opt.AddConsumers(typeof(RabbitMqConfig).Assembly);
 
             opt.UsingRabbitMq((context, cfg) =>
@@ -20,6 +19,8 @@ public static class RabbitMqConfig
                         host.Username(configuration["RABBITMQ_DEFAULT_USER"]!);
                         host.Password(configuration["RABBITMQ_DEFAULT_PASS"]!);
                     });
+
+                cfg.UseInMemoryOutbox(context);
 
                 cfg.ConfigureEndpoints(context);
             });

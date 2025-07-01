@@ -1,8 +1,5 @@
 using DotNetEnv;
-using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Web.Api.Configurations;
-using Web.Api.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,7 @@
+using Application.Dtos;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Web.Api.Events;
+using Web.Api.Commands;
 
 namespace Web.Api.Controllers;
 
@@ -9,12 +10,12 @@ namespace Web.Api.Controllers;
 public class UserController(IPublishEndpoint publisher) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> PublishUser(UserEvent userEvent)
+    public async Task<IActionResult> AddUser([FromBody] UserDto userDto)
     {
-        Console.WriteLine($"Sent {userEvent.Name} From OrderService. <-----------------------------------");
 
-        await publisher.Publish(userEvent);
+        Console.WriteLine($"--------------------------------------Start--------------------------------------");
+        await publisher.Publish(new AddUserCommand(userDto.Name, userDto.Age,userDto.Email));
 
-        return NoContent();
+        return Ok();
     }
 }

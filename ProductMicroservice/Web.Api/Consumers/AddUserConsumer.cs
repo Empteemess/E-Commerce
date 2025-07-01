@@ -1,32 +1,23 @@
-using Infrastructure.Data;
-using MassTransit;
-using Web.Api.Entities;
+﻿using MassTransit;
+using Web.Api.Commands;
 using Web.Api.Events;
 
 namespace Web.Api.Consumers;
 
-public class AddUserConsumer : IConsumer<AddUserEvent>
+public class AddUserConsumer(IPublishEndpoint publish) : IConsumer<AddUserCommand>
 {
-    private readonly AppDbContext _dbContext;
-    private readonly ILogger<AddUserConsumer> _logger;
-
-    public AddUserConsumer(AppDbContext dbContext,ILogger<AddUserConsumer> logger)
+    public async Task Consume(ConsumeContext<AddUserCommand> context)
     {
-        _dbContext = dbContext;
-        _logger = logger;
-    }
 
-    public async Task Consume(ConsumeContext<AddUserEvent> context)
-    {
-        var user = new User
+        Console.WriteLine($"User -> ( {context.Message.UserName} ) (Added) ()() --> ProductMicroservice <--()()");
+
+
+        await publish.Publish(new UserAddedEvent
         {
-            Name = context.Message.Name,
-            Age = context.Message.Age
-        };
-
-        _logger.LogInformation($"User -> ({context.Message.Name}) with age -> ({context.Message.Age}) added");
-
-        await _dbContext.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
+            UserId = Guid.NewGuid(),
+            Name = context.Message.UserName,
+            Age = context.Message.Age,
+            Email = context.Message.Email
+        });
     }
 }

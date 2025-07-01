@@ -1,4 +1,4 @@
-namespace Web.Api.Entities;
+namespace Domain.Entities;
 
 public class User
 {
