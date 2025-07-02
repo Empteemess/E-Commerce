@@ -53,7 +53,7 @@ public class UserSaga : MassTransitStateMachine<UserSagaData>
                 .TransitionTo(Onboarding)
                 .Publish(context => new OnboardingCompletedEvent
                 {
-                    UserId = context.Message.UserId,
+                    SubscriberId = context.Message.UserId,
                     Name = context.Message.Name
                 })
                 .Finalize());
