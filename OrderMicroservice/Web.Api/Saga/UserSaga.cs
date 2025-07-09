@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.IRepository;
 using MassTransit;
 using Web.Api.Commands;
 using Web.Api.Events;
@@ -17,7 +18,7 @@ public class UserSaga : MassTransitStateMachine<UserSagaData>
     public Event<WelcomeEmailSentEvent> WelcomeEmailSentEvent { get; set; }
 
 
-    public UserSaga()
+    public UserSaga(IUnitOfWork unitOfWork)
     {
         InstanceState(x => x.CurrentState);
 
@@ -27,14 +28,19 @@ public class UserSaga : MassTransitStateMachine<UserSagaData>
 
         Initially(
             When(UserAddedEvent)
-                .Then(context =>
+                .Then(async context =>
                 {
                     context.Saga.Email = context.Message.Email;
                     context.Saga.UserId = context.Message.UserId;
                     context.Saga.UserName = context.Message.Name;
+
+                    var command = new SendWelcomeEmailCommand(context.Saga.UserId, context.Saga.UserName ?? "Default");
+
+                    var outboxMessage = unitOfWork.OutboxMessageRepository.GetOutboxMessage(command);
+
+                    await unitOfWork.OutboxMessageRepository.AddAsync(outboxMessage);
                 })
-                .TransitionTo(Welcoming)
-                .Publish(context => new SendWelcomeEmailCommand(context.Saga.UserId,context.Saga.UserName ?? "Default")));
+                .TransitionTo(Welcoming));
 
         During(Welcoming,
             When(WelcomeEmailSentEvent)
