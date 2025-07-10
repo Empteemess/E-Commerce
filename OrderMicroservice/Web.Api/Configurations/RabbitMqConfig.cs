@@ -1,5 +1,7 @@
 using Domain.Entities;
+using Domain.IRepository;
 using Infrastructure.Data;
+using Infrastructure.Repository;
 using MassTransit;
 using Web.Api.Saga;
 
@@ -11,6 +13,7 @@ public static class RabbitMqConfig
     {
         services.AddMassTransit(opt =>
         {
+            opt.AddScoped<IUnitOfWork, UnitOfWork>();
             opt.AddSagaStateMachine<UserSaga, UserSagaData>()
                 .EntityFrameworkRepository(r =>
                 {
