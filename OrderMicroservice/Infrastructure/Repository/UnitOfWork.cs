@@ -14,5 +14,10 @@ public class UnitOfWork : IUnitOfWork
         OutboxMessageRepository = outboxMessageRepository;
     }
 
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
     public IOutboxMessageRepository OutboxMessageRepository { get; }
 }

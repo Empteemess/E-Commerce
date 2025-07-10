@@ -15,12 +15,12 @@ public class OutboxMessageRepository : IOutboxMessageRepository
         _dbContext = context;
     }
 
-    public OutboxMessage GetOutboxMessage<T>(T command)
+    public OutboxMessage MapToOutboxMessage<T>(T command)
     {
         var outboxMessage = new OutboxMessage
         {
             Data = JsonSerializer.Serialize(command),
-            EventType = command?.GetType().AssemblyQualifiedName,
+            EventType = typeof(T).Name,
             CreatedAt = DateTime.UtcNow
         };
 

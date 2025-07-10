@@ -2,5 +2,6 @@
 
 public interface IUnitOfWork
 {
+    Task SaveChangesAsync();
     IOutboxMessageRepository OutboxMessageRepository { get; }
 }

@@ -6,9 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 Env.Load();
 
 builder.Services
-    .AddRabbitMq(builder.Configuration)
     .AddDbConfigurations(builder.Configuration)
-    .AddServiceConfigs();
+    .AddServiceConfigs()
+    .AddRabbitMq(builder.Configuration);
 
 builder.Configuration.AddEnvironmentVariables();
 
